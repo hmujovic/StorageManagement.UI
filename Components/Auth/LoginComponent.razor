@@ -1,0 +1,92 @@
+﻿@using System.ComponentModel.DataAnnotations
+@inject NavigationManager navigationManager;
+@inject IAuthenticationViewModel authenticationViewModel;
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+ <EditForm Model="_userForAuthentication" OnValidSubmit="ExecuteLogin" style="align-items:center; display:flex; flex-direction:column; margin-top:20px;">
+    <DataAnnotationsValidator/>
+    <MudCard Style="width:90%;" Elevation="0">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Color="@Color.Primary" Typo="Typo.h4">Anmelden</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudTextField Variant="Variant.Outlined" Label="E-Mail" @bind-Value="_userForAuthentication.Email" For="@(() => _userForAuthentication.Email)"/>
+            <MudTextField Variant="Variant.Outlined" Label="Passwort" Class="mt-3"
+                          @bind-Value="_userForAuthentication.Password" For="@(() => _userForAuthentication.Password)" InputType="@PasswordInput" Adornment="Adornment.End" Input AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ShowHidePassword" AdornmentAriaLabel="Show Password"/>
+            @if (ShowAuthError)
+            {
+                <MudAlert Class="mt-2" Severity="Severity.Error">E-Mail/ Passwort falsch</MudAlert>
+            }
+            <MudText Style="cursor:pointer" Class="mt-3" @onclick=" OpenForgotPasswordPage" Typo="Typo.body2" Color="Color.Secondary"> Passwort vergessen?</MudText>
+        </MudCardContent>
+        <MudCardActions Style="display:flex; flex-direction:column">
+            <MudButton ButtonType="ButtonType.Submit" Class="mb-2" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Anmelden</MudButton>
+            @* <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="mt-3 w-100 mb-10" @onclick=" Registration"> Registrieren</MudButton> *@
+        </MudCardActions>
+    </MudCard>
+</EditForm> 
+
+@code {
+    private LoginDto _userForAuthentication = new LoginDto();
+    public bool ShowAuthError { get; set; }
+    public string? Error { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        // if (user.Identity!.IsAuthenticated)
+        // {
+        //     navigationManager.NavigateTo("/dashboard");
+        // }
+    }
+
+    public async Task ExecuteLogin()
+    {
+        ShowAuthError = false;
+        var result = await authenticationViewModel.Login(_userForAuthentication);
+        if (!result.IsSuccessful)
+        {
+            Error = result.ErrorMessage;
+            ShowAuthError = true;
+        }
+        else
+        {
+            navigationManager.NavigateTo("/dashboard");
+        }
+    }
+
+    bool showPassword;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ShowHidePassword()
+    {
+        if (showPassword)
+        {
+            showPassword = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            showPassword = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+    private void OpenForgotPasswordPage()
+    {
+        navigationManager.NavigateTo("forgot-password");
+    }
+
+    private void Registration()
+    {
+        navigationManager.NavigateTo("registration");
+    }
+
+}

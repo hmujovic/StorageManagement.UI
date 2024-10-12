@@ -1,0 +1,136 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using Components.Dialog
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager navigationManager;
+@inject IAuthenticationViewModel authenticationViewModel;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ISnackbar _snackbar;
+@inject IDialogService dialogService;
+
+<EditForm Model="_userRegistration" OnValidSubmit="ExecuteRegistration" style="align-items:center; display:flex; flex-direction:column; margin-top:20px; ">
+    <DataAnnotationsValidator/>
+    <MudCard Style="width:90%;" Elevation="0">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Color="@Color.Primary" Typo="Typo.h5"> Jetzt kostenlos registrieren!​</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudGrid Spacing="1">
+                <MudItem xs="12">
+                    <MudSelect T="string" Label="Anrede" Variant="Variant.Outlined" @bind-Value="@_userRegistration.Sex">
+                        <MudSelectItem Value=@("Herr")/>
+                        <MudSelectItem Value=@("Frau")/>
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="6">
+                    <MudTextField Label="Vorname" Required RequiredError="Bitte ausfüllen" Variant="Variant.Outlined"
+                                  @bind-Value="_userRegistration.FirstName" For="@(() => _userRegistration.FirstName)"/>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField Label="Nachname" Class="" Required RequiredError="Bitte ausfüllen" Variant="Variant.Outlined"
+                                  @bind-Value="_userRegistration.LastName" For="@(() => _userRegistration.LastName)"/>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="E-Mail" For="@(() => _userRegistration.Email)" Class="" Required RequiredError="Bitte ausfüllen" Variant="Variant.Outlined"
+                                  Validation="@(new EmailAddressAttribute() { ErrorMessage = "Die e-mail Adresse ist ungültig" })"
+                                  @bind-Value="_userRegistration.Email"/>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="Telefonnummer" Class="" Variant="Variant.Outlined"
+                                  @bind-Value="_userRegistration.PhoneNumber" For="@(() => _userRegistration.PhoneNumber)"/>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField Label="Passwort" Class="" InputType="@PasswordInput" Variant="Variant.Outlined" Immediate
+                                  @bind-Value="_userRegistration.Password" For="@(() => _userRegistration.Password)" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ShowHidePassword" AdornmentAriaLabel="Show Password"/>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField Label="Bestätige das Passwort" Class="" InputType="@PasswordInput" Variant="Variant.Outlined" Immediate
+                                  @bind-Value="_userRegistration.ConfirmPassword" For="@(() => _userRegistration.ConfirmPassword)" Adornment="Adornment.End" Input AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ShowHidePassword" AdornmentAriaLabel="Show Password"/>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="mt-3 w-100 mb-10" @onclick="OpenNdaDialog">Geheimhaltungsvereinbarung</MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+        <MudCardActions Style="display:flex; flex-direction:column">
+            <MudButton ButtonType="ButtonType.Submit" Class="mb-2" Disabled="string.IsNullOrEmpty(_userRegistration.Email) || string.IsNullOrEmpty(_userRegistration.Password) || _userRegistration.Password != _userRegistration.ConfirmPassword || !AcceptedNda" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">
+                Registrieren
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="mt-3 w-100 mb-10" @onclick=" NavigateToLogin"> Anmelden</MudButton>
+        </MudCardActions>
+    </MudCard>
+</EditForm>
+
+@code {
+    private RegistrationDto _userRegistration = new();
+    public bool ShowAuthError { get; set; }
+    public string? Error { get; set; }
+    bool Guardian { get; set; }
+    bool AcceptedNda { get; set; } = false;
+    bool showPassword;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ShowHidePassword()
+    {
+        if (showPassword)
+        {
+            showPassword = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            showPassword = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+    private async Task OpenNdaDialog()
+    {
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Medium
+        };
+
+        const string dialogTitle = "";
+        var dialog = await dialogService!.ShowAsync<NdaPolicyDialog>(dialogTitle, options);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            StateHasChanged();
+        }
+
+        AcceptedNda = result.Data as bool? ?? false;
+        StateHasChanged();
+    }
+
+  
+
+    public async Task ExecuteRegistration()
+    {
+        ShowAuthError = false;
+        var result = await authenticationViewModel.Registration(_userRegistration);
+        if (result)
+        {
+            _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
+            _snackbar.Add("Sie haben sich erfolgreich registriert!", Severity.Success);
+            navigationManager.NavigateTo("/");
+        }
+        else
+        {
+            _snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
+            _snackbar.Add("Ein Benutzer mit dieser E-Mail existiert", Severity.Error);
+        }
+    }
+
+    public void NavigateToLogin()
+    {
+        navigationManager.NavigateTo("/");
+    }
+
+}

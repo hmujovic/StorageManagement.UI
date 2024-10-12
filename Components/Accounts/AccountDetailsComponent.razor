@@ -1,0 +1,32 @@
+﻿@inherits AccountDetailsViewModel
+
+<AuthorizeView Roles="Fachadmin,Superadmin" Context="Auth">
+    <Authorized>
+        <MudDialog Style="width: inherit;">
+            <DialogContent>
+                <MudGrid Spacing="0">
+                    <MudItem xs="12" sm="6" md="6" lg="4">
+                        <MudText Typo="Typo.subtitle2" Color="Color.Primary" style="font-weight:bold">Vorname</MudText>
+                        <MudText Typo="Typo.body1">@Account?.FirstName</MudText>
+
+                        <MudText Typo="Typo.subtitle2" style="margin-top: 10px;font-weight:bold" Color="Color.Primary">Nachname</MudText>
+                        <MudText Typo="Typo.body1">@Account?.LastName</MudText>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="6" lg="6">
+                        @if (Account?.Address != null)
+                        {
+                            <MudText Typo="Typo.subtitle2" style="margin-top: 10px; font-weight:bold" Color="Color.Primary">Straße und Hausnummer</MudText>
+                            <MudText Typo="Typo.body1">@Account?.Address</MudText>
+                        }
+
+                        @if (Account?.City != null)
+                        {
+                            <MudText Typo="Typo.subtitle2" style="margin-top: 10px; font-weight:bold" Color="Color.Primary">Ort</MudText>
+                            <MudText Typo="Typo.body1">@Account?.City</MudText>
+                        }
+                    </MudItem>
+                </MudGrid>
+            </DialogContent>
+        </MudDialog>
+    </Authorized>
+</AuthorizeView>
