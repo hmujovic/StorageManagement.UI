@@ -1,0 +1,150 @@
+﻿@inherits AccountViewModel
+
+<AuthorizeView Roles="Fachadmin, Superadmin, Counsellor" Context="Account">
+    <Authorized>
+        <MudTabs Elevation="1" PanelClass="pa-1" SliderColor="Color.Tertiary">
+            <MudTabPanel Text="Kunde" Icon="@Icons.Material.Filled.People" OnClick="@(() => GetUserAccounts())">
+                <MudTable Class="ml-4 mt-4 mr-4" Elevation="4" Items="@Users" Dense Hover="true" Bordered="false" Filter="new Func<AccountDto, bool>(FilterFunc)" Loading=@Loading>
+                    <ToolBarContent>
+                        <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Tertiary" Variant=Variant.Outlined style="font-weight: bold;" OnClick='() => OpenCreateOrUpdateUser(new AccountDto(), "Kunde")'>
+                            Neuer Nutzer
+                        </MudButton>
+                        <MudSpacer/>
+                        <MudTextField T="string" Label="Suchen" Variant="Variant.Outlined" @bind-Value="SearchString" Clearable="true" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Search"></MudTextField>
+                    </ToolBarContent>
+                    <ColGroup>
+                        <col/>
+                        <col/>
+                        <col/>
+                        <col/>
+                        <col/>
+                        <col/>
+                    </ColGroup>
+                    <HeaderContent>
+                        <MudTh style="color:var(--mud-palette-primary); font-weight: bold;">Vorname</MudTh>
+                        <MudTh style="color:var(--mud-palette-primary); font-weight: bold;">Nachname</MudTh>
+                        <MudTh style="color:var(--mud-palette-primary); font-weight: bold;">E-Mail</MudTh>
+                        <MudTh style="color:var(--mud-palette-primary); font-weight: bold;">Telefonnummer</MudTh>
+                        <MudTh></MudTh>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Vorname">@context.FirstName</MudTd>
+                        <MudTd DataLabel="Nachname">@context.LastName</MudTd>
+                        <MudTd DataLabel="E-Mail">@context.Email</MudTd>
+                        <MudTd DataLabel="Telefonnummer">@context.MobileNumber</MudTd>
+                        <MudTd DataLabel="Nutzer bearbeiten">
+                            <MudTooltip Text="Nutzer bearbeiten">
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick='() => OpenCreateOrUpdateUser(context, "Kunde")' Color="Color.Primary" Size="Size.Small"/>
+                            </MudTooltip>
+                        </MudTd>
+                        <MudTd DataLabel="Nutzer löschen">
+                            <MudTooltip Text="Nutzer löschen">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="(() => Delete(context.Id, InternType))" Color="Color.Primary" Size="Size.Small"/>
+                            </MudTooltip>
+                        </MudTd>
+                    </RowTemplate>
+                    <PagerContent>
+                        <MudTablePager RowsPerPageString="Einträge pro Seite" InfoFormat="@InfoFormat"/>
+                    </PagerContent>
+                </MudTable>
+            </MudTabPanel>
+            @if (IsAdmin || IsOrganisation)
+            {
+                <MudTabPanel Text="Counsellors" Icon="@Icons.Material.Filled.People" OnClick="@(() => GetCounsellorAccounts())">
+                    <MudTable Class="ml-4 mt-4 mr-4" Elevation="4" Items="@Counsellors" Dense Hover="true" Bordered="false" Filter="new Func<AccountDto, bool>(FilterFunc)" Loading=@Loading>
+                        <ToolBarContent>
+                            <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Tertiary" Variant=Variant.Outlined style="font-weight: bold;" OnClick='() => OpenCreateOrUpdateUser(new AccountDto(), "Counsellor")'>
+                                Neuer Nutzer
+                            </MudButton>
+                            <MudSpacer/>
+                            <MudTextField T="string" Label="Suchen" Variant="Variant.Outlined" @bind-Value="SearchString" Clearable="true" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Search"></MudTextField>
+                        </ToolBarContent>
+                        <ColGroup>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                        </ColGroup>
+                        <HeaderContent>
+                            <MudTh style="color:var(--mud-palette-primary); font-weight: bold;">Vorname</MudTh>
+                            <MudTh style="color:var(--mud-palette-primary); font-weight: bold;">Nachname</MudTh>
+                            <MudTh style="color:var(--mud-palette-primary); font-weight: bold;">E-Mail</MudTh>
+                            <MudTh style="color:var(--mud-palette-primary); font-weight: bold;">Telefonnummer</MudTh>
+                            <MudTh></MudTh>
+                            <MudTh></MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Vorname">@context.FirstName</MudTd>
+                            <MudTd DataLabel="Nachname">@context.LastName</MudTd>
+                            <MudTd DataLabel="E-Mail">@context.Email</MudTd>
+                            <MudTd DataLabel="Telefonnummer">@context.MobileNumber</MudTd>
+                            <MudTd DataLabel="Nutzer bearbeiten">
+                                <MudTooltip Text="Nutzer bearbeiten">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick='() => OpenCreateOrUpdateUser(context, "Counsellor")' Color="Color.Primary" Size="Size.Small"/>
+                                </MudTooltip>
+                            </MudTd>
+                            <MudTd DataLabel="Nutzer löschen">
+                                <MudTooltip Text="Nutzer löschen">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="(() => Delete(context.Id, InternType))" Color="Color.Primary" Size="Size.Small"/>
+                                </MudTooltip>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager RowsPerPageString="Einträge pro Seite" InfoFormat="@InfoFormat"/>
+                        </PagerContent>
+                    </MudTable>
+                </MudTabPanel>
+            }
+            @if (IsAdmin)
+            {
+                <MudTabPanel Text="Fachadmin" Icon="@Icons.Material.Filled.People" OnClick="@(() => GetFachAdminAccounts())">
+                    <MudTable Class="ml-4 mt-4 mr-4" Elevation="4" Items="@Fachadmins" Dense Hover="true" Bordered="false" Filter="new Func<AccountDto, bool>(FilterFunc)">
+                        <ToolBarContent>
+                            <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Tertiary" Variant=Variant.Outlined style="font-weight: bold;" @onclick='() => OpenCreateOrUpdateUser(new AccountDto(), "Fachadmin")'>
+                                Neuer Nutzer
+                            </MudButton>
+                            <MudSpacer/>
+                            <MudTextField T="string" Label="Suchen" Variant="Variant.Outlined" @bind-Value="SearchString" Clearable="true" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Search"></MudTextField>
+                        </ToolBarContent>
+                        <ColGroup>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                            <col/>
+                        </ColGroup>
+                        <HeaderContent>
+                            <MudTh style="color:var(--mud-palette-primary); font-weight: bold;">Vorname</MudTh>
+                            <MudTh style="color:var(--mud-palette-primary); font-weight: bold;">Nachname</MudTh>
+                            <MudTh style="color:var(--mud-palette-primary); font-weight: bold;">E-Mail</MudTh>
+                            <MudTh style="color:var(--mud-palette-primary); font-weight: bold;">Telefonnummer</MudTh>
+                            <MudTh style="color:var(--mud-palette-primary); font-weight: bold;"></MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Vorname">@context.FirstName</MudTd>
+                            <MudTd DataLabel="Nachname">@context.LastName</MudTd>
+                            <MudTd DataLabel="E-Mail">@context.Email</MudTd>
+                            <MudTd DataLabel="Telefonnummer">@context.MobileNumber</MudTd>
+                            <MudTd DataLabel="Nutzer bearbeiten">
+                                <MudTooltip Text="Nutzer bearbeiten">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick='() => OpenCreateOrUpdateUser(context, "Fachadmin")' Color="Color.Primary" Size="Size.Small"/>
+                                </MudTooltip>
+                            </MudTd>
+                            <MudTd DataLabel="Nutzer löschen">
+                                <MudTooltip Text="Nutzer löschen">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="(() => Delete(context.Id, ExternType))" Color="Color.Primary" Size="Size.Small"/>
+                                </MudTooltip>
+                            </MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager RowsPerPageString="Einträge pro Seite" InfoFormat="@InfoFormat"/>
+                        </PagerContent>
+                    </MudTable>
+                </MudTabPanel>
+            }
+        </MudTabs>
+    </Authorized>
+</AuthorizeView>

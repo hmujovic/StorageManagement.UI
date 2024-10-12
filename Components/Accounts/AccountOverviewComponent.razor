@@ -1,0 +1,70 @@
+﻿@inherits AccountCreateAndUpdateViewModel
+<MudGrid Spacing="0">
+    <MudItem xs="12">
+        <MudText Style="padding: 30px; padding-bottom:0px" Typo="Typo.h4">Mein Profil</MudText>
+    </MudItem>
+    <MudItem xs="8" Class="p-4">
+        <EditForm Model="@Account">
+            <DataAnnotationsValidator/>
+            <MudPaper Elevation="4" Style="padding:20px">
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField Label="Vorname" Required Variant="Variant.Outlined"
+                                      @bind-Value="Account.FirstName" For="@(() => Account.FirstName)"/>
+                        <MudTextField Label="E-Mail" Class="mt-3" Required Variant="Variant.Outlined"
+                                      @bind-Value="Account.Email" For="@(() => Account.Email)"/>
+                        <MudDatePicker Label="Geburtsdatum" Class="mt-3" Variant="Variant.Outlined"
+                                       @bind-Date="Account.DateOfBirth"/>
+                        <MudTextField Label="Geboren in" Class="mt-3" Variant="Variant.Outlined"
+                                      @bind-Value="Account.Country" For="@(() => Account.Country)"/>
+                        <MudTextField Label="PLZ" Class="mt-3" Variant="Variant.Outlined"
+                                      @bind-Value="Account.PostalCode" For="@(() => Account.PostalCode)"/>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField Label="Nachname" Class="" Required Variant="Variant.Outlined"
+                                      @bind-Value="Account.LastName" For="@(() => Account.LastName)"/>
+                        <MudTextField Label="Telefon" Class="mt-3" Variant="Variant.Outlined"
+                                      @bind-Value="Account.MobileNumber" For="@(() => Account.MobileNumber)"/>
+                        <MudTextField Label="Ort" Class="mt-4" Variant="Variant.Outlined"
+                                      @bind-Value="Account.City" For="@(() => Account.City)"/>
+                        <MudTextField Label="Straße und Hausnummer" Class="mt-4" Required Variant="Variant.Outlined"
+                                      @bind-Value="Account.Address" For="@(() => Account.Address)"/>
+                    </MudItem>
+                    <MudItem xs="12" Style="text-align: right;">
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   Class="mt-2 mr-2 mb-2"
+                                   OnClick="() => CreateOrUpdateAsync(Account)">
+                            Profil aktualisieren
+                        </MudButton>
+                    </MudItem>
+
+                </MudGrid>
+
+            </MudPaper>
+        </EditForm>
+    </MudItem>
+    <MudItem xs="4" Class="p-4" Style="align-self: center;">
+        <MudItem xs="12" Style="align-self: center;">
+            <MudPaper Elevation="4" Style="text-align: center;">
+
+                <br/>
+                <MudText Typo="Typo.body1">Maximale Größe: 5 MB</MudText>
+                @* <InputFile id="fileInput112" OnChange="UploadFiles" hidden accept=".jpg, .jpeg, .png" /> *@
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Class="mt-2 mr-2 mb-2"
+                           StartIcon="@Icons.Material.Filled.Image"
+                           for="fileInput112">
+                    Profilbild hochladen
+                </MudButton>
+            </MudPaper>
+
+        </MudItem>
+        <MudPaper Elevation="4">
+            <AccountChangePasswordComponent></AccountChangePasswordComponent>
+        </MudPaper>
+    </MudItem>
+
+</MudGrid>
