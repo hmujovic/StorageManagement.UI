@@ -61,7 +61,7 @@
         {
             try
             {
-                var authResult = await authenticationService.RegisterAsync(registrationAccount);
+                var authResult = await authenticationService.Register(registrationAccount);
                 if (authResult.IsSuccess)
                 {
                     snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopLeft;
