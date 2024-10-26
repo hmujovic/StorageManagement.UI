@@ -83,7 +83,7 @@ namespace ViewModels
                 var dialogResult = await SetConfirmDialog();
                 if (!dialogResult.Canceled)
                 {
-                    var response = await AccountService!.DeleteAccount(accountId);
+                    var response = await AccountService!.Delete(accountId);
                     if (response.IsSuccess)
                     {
                         switch (role)
