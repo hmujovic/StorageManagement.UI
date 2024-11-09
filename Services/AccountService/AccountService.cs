@@ -54,7 +54,6 @@
             }
         }
 
-
         public async Task<GeneralResponseDto> Update(string accountId, AccountUpdateDto account)
         {
             try

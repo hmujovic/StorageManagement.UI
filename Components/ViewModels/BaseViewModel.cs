@@ -1,12 +1,12 @@
 ﻿namespace ViewModels
 {
-    public abstract class BaseViewModel : ComponentBase, INotifyPropertyChanged
+    public abstract class BaseViewModel : ComponentBase
     {
         [Inject] public IDialogService? DialogService { get; set; }
 
         public static MudTheme DefaultTheme = new()
         {
-            Palette = new Palette()
+            PaletteLight = new PaletteLight()
             {
                 Primary = new MudBlazor.Utilities.MudColor("#6AACBD"),
                 Secondary = new MudBlazor.Utilities.MudColor("#6AACBD"),
@@ -15,8 +15,7 @@
                 WarningContrastText = Colors.Amber.Lighten5,
                 Error = Colors.Red.Darken4,
                 Success = Colors.Green.Darken1,
-                Warning = Colors.Amber.Default,
-                //TextSecondary = new MudBlazor.Utilities.MudColor("#FE6625"),
+                Warning = Colors.Amber.Default
             },
             Typography = new Typography()
             {
@@ -41,27 +40,5 @@
                 DefaultBorderRadius = "8px",
             }
         };
-
-        private bool _isBusy = false;
-
-        public bool IsBusy
-        {
-            get => _isBusy;
-            set => SetValue(ref _isBusy, value);
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null!)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void SetValue<T>(ref T backingFiled, T value, [CallerMemberName] string propertyName = null!)
-        {
-            if (EqualityComparer<T>.Default.Equals(backingFiled, value)) return;
-            backingFiled = value;
-            OnPropertyChanged(propertyName);
-        }
     }
 }

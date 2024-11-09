@@ -38,5 +38,4 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IAuthenticationViewModel, AuthenticationViewModel>();
 
-
 await builder.Build().RunAsync();

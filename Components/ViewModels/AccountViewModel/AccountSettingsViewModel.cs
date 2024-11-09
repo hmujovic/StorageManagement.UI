@@ -10,40 +10,32 @@ namespace ViewModels
 
         protected override async Task OnInitializedAsync()
         {
-            PropertyChanged += async (sender, e) => { await InvokeAsync(StateHasChanged); };
-            await GetAccountAsync();
+            await LoadAccountInfo();
             Loading = false;
         }
 
-        public async Task OpenUpdateUser(AccountDto account)
+        public async Task OpenAccountDialog(AccountDto accountDto)
         {
             var options = new DialogOptions()
             {
                 CloseButton = true,
-                MaxWidth = MaxWidth.Medium,
+                MaxWidth = MaxWidth.Medium
             };
 
-            var accountCreate = account.Adapt<AccountCreationDto>();
+            var accountForUpdate = accountDto.Adapt<AccountUpdateDto>();
 
-            var parameters = new DialogParameters { ["Account"] = accountCreate };
-            var text = !string.IsNullOrEmpty(account.Id) ? "Benutzer bearbeiten" : "Neuen Benutzer erstellen";
-
-            var dialog = await DialogService!.ShowAsync<AccountFormComponent>(text, parameters, options);
+            var parameters = new DialogParameters { ["Account"] = accountForUpdate };
+            const string text = "Account Update";
+            var dialog = await DialogService!.ShowAsync<AccountUpdateComponent>(text, parameters, options);
             var result = await dialog.Result;
             if (!result.Canceled)
             {
-                await GetAccountAsync();
+                await LoadAccountInfo();
                 StateHasChanged();
             }
         }
 
-        public void OpenChangePassword()
-        {
-            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small };
-            DialogService!.Show<AccountChangePasswordComponent>(null, new DialogParameters(), options);
-        }
-
-        private async Task GetAccountAsync()
+        private async Task LoadAccountInfo()
         {
             var accountId = await LocalStorage!.GetItemAsync<string>("accountId");
             try
