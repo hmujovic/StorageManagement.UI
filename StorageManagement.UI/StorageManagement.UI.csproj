@@ -17,11 +17,4 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Components\Components.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Reference Include="Contract">
-	    <HintPath>..\..\StorageManagement.API\Contract\bin\Debug\net8.0\Contract.dll</HintPath>
-	  </Reference>
-	</ItemGroup>
-
 </Project>

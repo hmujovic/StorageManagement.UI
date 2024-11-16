@@ -37,13 +37,12 @@ public class ProductListViewModel : ComponentBaseViewModel
             MaxWidth = MaxWidth.Medium
         };
 
-        var dialogTitle = productDto.Id == 0 ? "Create product" : "UpdateProduct";
+        var dialogTitle = productDto.Id == 0 ? "Create product" : "Update Product";
         var dialog = await DialogService!.ShowAsync<ProductFormComponent>(dialogTitle, parameters, options);
 
         var result = await dialog.Result;
         if (!result!.Canceled)
         {
-            Products.Add(productDto);
             StateHasChanged();
         }
     }

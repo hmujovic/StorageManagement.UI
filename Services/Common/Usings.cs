@@ -1,5 +1,5 @@
 ﻿global using Blazored.LocalStorage;
-global using Contract;
+global using Dto;
 global using System.Collections.ObjectModel;
 global using System.Net.Http.Headers;
 global using System.Text;

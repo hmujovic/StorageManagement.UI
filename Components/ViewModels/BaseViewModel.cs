@@ -8,10 +8,10 @@
         {
             PaletteLight = new PaletteLight()
             {
-                Primary = new MudBlazor.Utilities.MudColor("#6AACBD"),
-                Secondary = new MudBlazor.Utilities.MudColor("#6AACBD"),
-                Tertiary = new MudBlazor.Utilities.MudColor("#FE6625"),
-                AppbarBackground = new MudBlazor.Utilities.MudColor("#6AACBD"),
+                Primary = new MudBlazor.Utilities.MudColor("#417B5A"),
+                Secondary = new MudBlazor.Utilities.MudColor("#417B5A"),
+                Tertiary = new MudBlazor.Utilities.MudColor("#417B5A"),
+                AppbarBackground = new MudBlazor.Utilities.MudColor("#417B5A"),
                 WarningContrastText = Colors.Amber.Lighten5,
                 Error = Colors.Red.Darken4,
                 Success = Colors.Green.Darken1,

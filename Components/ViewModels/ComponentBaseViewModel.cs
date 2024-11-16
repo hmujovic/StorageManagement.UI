@@ -1,10 +1,10 @@
 ﻿global using AuthProviders;
 global using Blazored.LocalStorage;
-global using Contract;
 global using Mapster;
 global using Microsoft.AspNetCore.Components;
 global using MudBlazor;
 global using Services;
+global using Dto;
 
 namespace ViewModels
 {
